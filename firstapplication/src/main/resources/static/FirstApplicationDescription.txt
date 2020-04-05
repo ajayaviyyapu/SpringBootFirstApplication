@@ -1,0 +1,1 @@
+Simple Static Message Return as part of Rest Web Service

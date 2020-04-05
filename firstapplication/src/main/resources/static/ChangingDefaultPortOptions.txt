@@ -1,0 +1,84 @@
+2. Using Property Files
+The fastest and easiest way to customize Spring Boot is by overriding the values of the default properties.
+
+For the server port, the property we want to change is server.port.
+
+By default, the embedded server start on port 8080. Let's see how we can provide a different value in an application.properties file:
+
+1
+server.port=8081
+Now the server will start on port 8081.
+
+Similarly, we can do the same if we're using an application.yml file:
+
+1
+2
+server:
+  port : 8081
+Both files are loaded automatically by Spring Boot if placed in the src/main/resources directory of a Maven application.
+
+2.1. Environment-Specific Ports
+If we have an application that's deployed in different environments, we may want it to run on different ports on each system.
+
+We can easily achieve this by combining the property files approach with Spring profiles. Specifically, we can create a property file for each environment.
+
+For example, we'll have an application-dev.properties file with the content:
+
+1
+server.port=8081
+Then, we'll add another application-qa.properties file with a different port:
+
+1
+server.port=8082
+The property files configuration should be sufficient for most cases.
+
+However, there are other options for this goal, so let's explore them as well.
+
+3. Programmatic Configuration
+We can configure the port programmatically by either setting the specific property when starting the application or by customizing the embedded server configuration.
+
+First, let's see how to set the property in the main @SpringBootApplication class:
+
+@SpringBootApplication
+public class CustomApplication {
+    public static void main(String[] args) {
+        SpringApplication app = new SpringApplication(CustomApplication.class);
+        app.setDefaultProperties(Collections
+          .singletonMap("server.port", "8083"));
+        app.run(args);
+    }
+}
+Next, to customize the server configuration, we have to implement the WebServerFactoryCustomizer interface:
+
+@Component
+public class ServerPortCustomizer 
+  implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
+  
+    @Override
+    public void customize(ConfigurableWebServerFactory factory) {
+        factory.setPort(8086);
+    }
+}
+Note that this applies to Spring Boot 2.x version.
+
+For Spring Boot 1.x, we can similarly implement the EmbeddedServletContainerCustomizer interface.
+
+4. Using Command Line Arguments
+When packaging and running our application as a jar, we can set the server.port argument with the java command:
+
+1
+java -jar spring-5.jar --server.port=8083
+Or by using the equivalent syntax:
+
+1
+java -jar -Dserver.port=8083 spring-5.jar
+5. Order of Evaluation
+
+As a final note, let's look at the order in which these approaches are evaluated by Spring Boot.
+
+Basically, the configurations priority is:
+
+embedded server configuration
+command line arguments
+property files
+main @SpringBootApplication configuration

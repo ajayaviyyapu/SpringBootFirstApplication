@@ -1,0 +1,67 @@
+https://hub.docker.com/
+
+To find docker images
+
+Please Note that JDK is depreciated. So use open JDK Image.
+
+Always go with the official images to get support.
+
+Deploy the jar into Docker Image.
+
+Create an Image and then Build an Image.
+
+Move to the location where the Docker file is present and run the following commands
+
+C:\Users\rajani.gaonkar\git\Spring\firstapplication>docker -v
+Docker version 19.03.4, build 9013bf5
+
+C:\Users\rajani.gaonkar\git\Spring\firstapplication>docker build -f Dockerfile -t docker-spring-boot .
+
+-f argument for the Docker File Name
+-t argument for the Docker Image Name
+
+
+Sending build context to Docker daemon  90.15MB
+Step 1/4 : FROM openjdk:8
+f15005b0235f: Pull complete
+41ebfd3d2fd0: Pull complete
+b998346ba308: Pull complete
+f01ec562c947: Pull complete
+74c11ae3efe8: Pull complete
+3a7e595a3ef5: Pull complete
+208407758d73: Pull complete
+Digest: sha256:2b14e3b158ac226d7945e3504050f7c5469eff02f496ca0e0ee8fde8524afcec  39.77MB/104.2MB
+Status: Downloaded newer image for openjdk:8
+ ---> 0d54b885dc70
+Step 2/4 : ADD target/docker-spring-boot.jar docker-spring-boot.jar
+ ---> d55964f070d8
+Step 3/4 : EXPOSE 8090
+ ---> Running in fa6be0495e96
+Removing intermediate container fa6be0495e96
+ ---> 2d198aabdee6
+Step 4/4 : ENTRYPOINT ["java,"-jar","docker-spring-boot.jar"]
+ ---> Running in 06ca27962ee1
+Removing intermediate container 06ca27962ee1
+ ---> 7ed9c36209df
+Successfully built 7ed9c36209df
+Successfully tagged docker-spring-boot:latest
+SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions for sensitive files and directories.
+
+
+
+C:\Users\rajani.gaonkar\git\Spring\firstapplication>docker images
+REPOSITORY           TAG                 IMAGE ID            CREATED              SIZE
+docker-spring-boot   latest              7ed9c36209df        About a minute ago   555MB
+openjdk              8                   0d54b885dc70        24 hours ago         510MB
+
+C:\Users\rajani.gaonkar\git\Spring\firstapplication>docker run -p 8085:8085 docker-spring-boot
+
+First Port is the port of the host server where we want to run the application
+
+Second Port number is the port on the docker container where the application is running.
+
+We can create multiple instances by giving different ports in the first port number value
+
+docker ps - show the running containers
+docker stop <container number> - stop the docker container
+docker system prune -- command will remove all stopped containers, all dangling images, and all unused networks
